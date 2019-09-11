@@ -1,7 +1,7 @@
 app-id: org.gnome.Tau
 runtime: org.gnome.Platform
-runtime-version: master
-sdk: org.gnome.Sdk
+runtime-version: "19.08"
+sdk: org.freedesktop.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.rust-stable
 command: tau

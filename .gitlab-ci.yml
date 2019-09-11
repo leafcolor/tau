@@ -76,8 +76,7 @@ test-cross:
     - ninja -C build # Can't run tests for crosscompiled binaries
 
 flatpak:
-  # Switch to https://hub.docker.com/r/freedesktopsdk/sdk once images for 18.08 are available or we can upgrade to 19.08
-  image: "registry.gitlab.gnome.org/gnome/gnome-runtime-images/rust_bundle:master"
+  image: "freedesktopsdk/sdk:19.08-x86_64"
   stage: "test"
   script:
     # Build the flatpak repo
