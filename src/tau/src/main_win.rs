@@ -188,7 +188,7 @@ impl MainWin {
         let notebook: Notebook = builder.get_object("notebook").unwrap();
 
         let theme_name = properties.borrow().gschema.get_key("theme-name");
-        debug!("{}: {}", gettext("Theme name"), &theme_name);
+        debug!("{}", gettext!("Using theme {name}", name = theme_name));
 
         let settings = new_settings();
 
