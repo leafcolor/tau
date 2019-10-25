@@ -24,9 +24,9 @@ use std::cmp::{max, min};
 use std::rc::Rc;
 use std::sync::Arc;
 use std::u32;
-use tau_linecache::{Line, LineCache};
 use unicode_segmentation::UnicodeSegmentation;
 use xrl::{Client, ConfigChanges, Query, Status, Update, ViewId};
+use xrl::{Line, LineCache};
 
 /// Returned by `EditView::get_text_size()` and used to adjust the scrollbars.
 pub struct TextSize {
