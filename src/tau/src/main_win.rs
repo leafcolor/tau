@@ -1,5 +1,5 @@
 use crate::about_win::AboutWin;
-use crate::errors::{ErrorDialog, ErrorMsg, XiClientError};
+use crate::errors::{ErrorDialog, ErrorMsg};
 use crate::frontend::{XiEvent, XiRequest};
 use crate::functions;
 use crate::prefs_win::PrefsWin;
@@ -9,7 +9,6 @@ use crate::syntax_config::SyntaxParams;
 use crate::view_history::{ViewHistory, ViewHistoryExt};
 use chrono::{DateTime, Utc};
 use editview::{main_state::ShowInvisibles, theme::u32_from_color, EditView, MainState};
-use futures::{future, Future};
 use gdk::{enums::key, ModifierType, WindowState};
 use gdk_pixbuf::Pixbuf;
 use gettextrs::gettext;
@@ -1482,26 +1481,15 @@ impl MainWinExt for Rc<MainWin> {
     fn req_new_view(&self, file_name: Option<String>) {
         trace!("Requesting new view");
 
-        self.runtime_opt.borrow_mut().as_mut().unwrap().spawn(
-            future::lazy(enclose!((self.core => core, self.event_tx => new_view_tx) move || {
-                core
-                .new_view(file_name.clone())
-                .then(|res|
-                    future::lazy(move || {
-                        match res {
-                            Ok(view_id) => new_view_tx.send(XiEvent::NewView(Ok((view_id, file_name)))).unwrap(),
-                            Err(e) => {
-                                if let xrl::ClientError::ErrorReturned(value) = e {
-                                    let err: XiClientError = serde_json::from_value(value).unwrap();
-                                    new_view_tx.send(XiEvent::NewView(Err(format!("{}: '{}'", gettext("Failed to open new view due to error"), err.message)))).unwrap()
-                                }
-                            },
-                        }
-                        Ok(())
-                    })
-                )
-            }))
-        );
+        self.runtime_opt
+            .borrow_mut()
+            .as_mut()
+            .unwrap()
+            .spawn(crate::create_error_view(
+                self.core.clone(),
+                self.event_tx.clone(),
+                file_name,
+            ));
     }
 
     /// When `xi-core` tells us to create a new view, we have to connect the ways to close the `EditView`,

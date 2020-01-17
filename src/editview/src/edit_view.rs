@@ -5,6 +5,7 @@ use crate::theme::{color_from_u32, set_margin_source_color, set_source_color, Pa
 use crate::view_item::{FindReplace, TopBar, ViewItem};
 use cairo::Context;
 use crossbeam_channel::{unbounded, Sender};
+use futures::compat::Compat01As03;
 use gdk::{
     enums::key, EventButton, EventKey, EventType, ModifierType, SELECTION_CLIPBOARD,
     SELECTION_PRIMARY,
@@ -1259,7 +1260,7 @@ impl EditView {
             enclose!((self.core => core, self.view_id => view_id) move || {
                 let board_future = core.cut(view_id);
 
-                let val = tokio::runtime::current_thread::block_on_all(board_future).unwrap();
+                let val = futures::executor::block_on(Compat01As03::new(board_future)).unwrap();
                 clipboard_tx.send(val).unwrap();
             }),
         );
@@ -1286,7 +1287,7 @@ impl EditView {
             enclose!((self.core => core, self.view_id => view_id) move || {
                 let board_future = core.copy(view_id);
 
-                let val = tokio::runtime::current_thread::block_on_all(board_future).unwrap();
+                let val = futures::executor::block_on(Compat01As03::new(board_future)).unwrap();
                 clipboard_tx.send(val).unwrap();
             }),
         );
@@ -1312,7 +1313,7 @@ impl EditView {
             enclose!((self.core => core, self.view_id => view_id) move || {
                 let board_future = core.copy(view_id);
 
-                let val = tokio::runtime::current_thread::block_on_all(board_future).unwrap();
+                let val = futures::executor::block_on(Compat01As03::new(board_future)).unwrap();
                 clipboard_tx.send(val).unwrap();
             }),
         );

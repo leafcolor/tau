@@ -1,5 +1,6 @@
 use editview::main_state::ShowInvisibles;
 use editview::Settings;
+use futures::compat::Compat01As03;
 use gio::prelude::*;
 use log::error;
 use serde_json::json;
@@ -92,7 +93,7 @@ pub fn setup_config(core: &Client) {
         (14.0, "Monospace".to_string())
     };
 
-    tokio::executor::current_thread::block_on_all(core.modify_user_config(
+    futures::executor::block_on(Compat01As03::new(core.modify_user_config(
         "general",
         json!({
             "tab_size": max(1, tab_size),
@@ -110,14 +111,14 @@ pub fn setup_config(core: &Client) {
             "word_wrap": word_wrap,
             "line_ending": LINE_ENDING,
         }),
-    ))
+    )))
     .unwrap();
 
     let val = gschema.get_strv("syntax-config");
 
     for x in val {
         if let Ok(val) = serde_json::from_str(x.as_str()) {
-            tokio::executor::current_thread::block_on_all(core.notify("modify_user_config", val))
+            futures::executor::block_on(Compat01As03::new(core.notify("modify_user_config", val)))
                 .unwrap();
         } else {
             error!("Failed to deserialize syntax config. Resetting...");
