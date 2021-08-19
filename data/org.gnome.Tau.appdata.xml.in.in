@@ -33,6 +33,28 @@
 	</provides>
 
 	<releases>
+		<release version="0.12.0" date="2021-08-19">
+			<p>
+				This is the firest release of Tau's 0.12 series. It contains some new features:
+			</p>
+
+				<ul>
+					 <li>(tau): add copy, paste and select-all to the integrated terminal</li>
+					<li>(tau): start terminal in cwd of current tab</li>
+					<li>(editview|tau): add multicursor select via Ctrl+L</li>
+					<li>(tau): add shortcut for go_to_line</li>
+					<li>(tau): add 'Go To Line...'</li>
+				</ul>
+
+			<p>
+				Additionally, it contains fixes to build with newer cargo versions, translation
+				updates and some additional misc bugfixes.
+
+				Please be aware that because Tau's backend (xi-editor) hasn't seen activity for some
+				time now, this major release will probably be the last feature release of Tau. Thanks
+				for your support.
+			</p>
+		</release>
 		<release version="0.11.3" date="2020-03-30">
 			<p>
 				Fix building with cargo's frozen mode

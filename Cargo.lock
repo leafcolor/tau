@@ -1520,7 +1520,7 @@ dependencies = [
 
 [[package]]
 name = "tau"
-version = "0.11.3"
+version = "0.12.0"
 dependencies = [
  "cairo-rs 0.8.1",
  "chrono",

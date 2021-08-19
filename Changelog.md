@@ -1,3 +1,28 @@
+## Changes in v0.12.0
+
+### Feature changes
+
+ - (tau): add copy, paste & select-all to the integrated terminal
+ - (tau): start terminal in cwd of current tab
+ - (editview|tau): add multicursor select via Ctrl+L
+ - (tau): add shortcut for go_to_line
+ - (tau): add 'Go To Line...'
+
+### Bugfixes
+
+ - (editview|tau): fix i18n problems
+ - (po): add terminal_context_menu.glade to POTFILES.in
+ - (editview|tau): properly send back results of measure_width
+ - (POTFILES): remove old files
+ - (editview): grab focus when pasting and revealing the replace dialogue
+ - (tau): make sure new_view calls always have the highest priority
+ - (tau): don't try to translate trace messages in go_to_line_action
+ - (tau): open empty view if there is no path in session
+ - (tau): don't open previous windows in new instance
+ - (tau): add margin in tab size popover
+ - (tau): add margin to inline switches in preferences window
+ - (flatpak): set app-id to org.gnome.TauDevel
+
 ## Changes in v0.11.3
 
 ### Feature changes
