@@ -198,7 +198,7 @@ impl LineCache {
     pub fn is_empty(&self) -> bool {
         if self.height() == 1 {
             if let Some(line) = self.get_line(0) {
-                if &line.text == "" {
+                if line.text.is_empty() {
                     return true;
                 }
             }

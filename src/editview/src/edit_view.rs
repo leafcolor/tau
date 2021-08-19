@@ -84,7 +84,7 @@ impl EditView {
         let gschema = main_state.borrow().settings.gschema.clone();
         let default_tab_size = gschema.get::<u32>("tab-size");
         let view_item = ViewItem::new(default_tab_size, hamburger_button);
-        let find_replace = FindReplace::new(&hamburger_button);
+        let find_replace = FindReplace::new(hamburger_button);
         let pango_ctx = view_item.get_pango_ctx();
         let im_context = IMContextSimple::new();
         let interface_font = Font::new(
@@ -510,13 +510,12 @@ impl EditView {
                 f64::from(da_width),
                 f64::from(da_height),
             );
-            cr.fill();
         } else {
             // Draw editing background
             set_source_color(cr, theme.background);
             cr.rectangle(0.0, 0.0, f64::from(da_width), f64::from(da_height));
-            cr.fill();
         }
+        cr.fill();
 
         set_source_color(cr, theme.foreground);
 
@@ -813,7 +812,7 @@ impl EditView {
         let layout = pango::Layout::new(&pango_ctx);
         layout.set_tabs(Some(&self.get_tabs()));
         layout.set_font_description(Some(&self.edit_font.borrow().font_desc));
-        layout.set_text(&line_string);
+        layout.set_text(line_string);
 
         // No need to handle foreground/background colour here since those do not impact the
         // line width.
@@ -1113,7 +1112,7 @@ impl EditView {
                 self.do_paste_primary(line, col);
             }
             3 => {
-                self.view_item.context_menu.popup_at_pointer(Some(&eb));
+                self.view_item.context_menu.popup_at_pointer(Some(eb));
             }
             _ => {}
         }
@@ -1307,8 +1306,8 @@ impl EditView {
             MainContext::sync_channel::<serde_json::value::Value>(PRIORITY_HIGH, 1);
 
         clipboard_rx.attach(None, move |val| {
-            if let Some(ref text) = val.as_str() {
-                Clipboard::get(&SELECTION_CLIPBOARD).set_text(&text);
+            if let Some(text) = val.as_str() {
+                Clipboard::get(&SELECTION_CLIPBOARD).set_text(text);
             }
 
             Continue(false)
@@ -1599,7 +1598,7 @@ impl EditView {
     pub fn language_changed(&self, syntax: &str) {
         debug!("Language has been changed to '{:?}'", syntax);
         // https://github.com/xi-editor/xi-editor/issues/1194
-        let lang = if syntax == "" || syntax == "Plain Text" {
+        let lang = if syntax.is_empty() || syntax == "Plain Text" {
             gettext("Plain Text")
         } else {
             syntax.to_string()
@@ -1680,7 +1679,7 @@ impl EditViewExt for Rc<EditView> {
                 edit_view.in_multicursor_edit.set(true);
                 edit_view.core.find(
                     edit_view.view_id,
-                    &val.as_str().unwrap_or_default(),
+                    val.as_str().unwrap_or_default(),
                     false,
                     false,
                     false,

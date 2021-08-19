@@ -1110,7 +1110,7 @@ impl MainWin {
                     title.push_str(file_name);
                     if self.state.borrow().settings.full_title {
                         if let Some(parent_directory) = path.parent().and_then(|p| p.to_str()) {
-                            title.push_str(&" — ");
+                            title.push_str(" — ");
                             title.push_str(parent_directory);
                         }
                     }
@@ -1196,7 +1196,7 @@ impl MainWinExt for Rc<MainWin> {
         term.spawn_sync(
             vte::PtyFlags::DEFAULT,
             cwd.as_deref(),
-            &[&std::path::Path::new(&shell)],
+            &[std::path::Path::new(&shell)],
             &[],
             SpawnFlags::DEFAULT,
             Some(&mut || functions::vte_callback()),
@@ -1231,7 +1231,7 @@ impl MainWinExt for Rc<MainWin> {
 
         term.connect_button_press_event(move |_, eb| {
             if eb.get_button() == 3 {
-                context_menu.popup_at_pointer(Some(&eb));
+                context_menu.popup_at_pointer(Some(eb));
             }
 
             Inhibit(false)
@@ -1546,7 +1546,7 @@ impl MainWinExt for Rc<MainWin> {
                 }
                 "column-right-margin" => {
                     let val = gschema.get("column-right-margin");
-                    if val >= 1 && val <= 1000 {
+                    if (1..=1000).contains(&val) {
                         main_win.state.borrow_mut().settings.column_right_margin = val;
                     }
                     if let Some(ev) = main_win.get_current_edit_view() {
@@ -1576,7 +1576,7 @@ impl MainWinExt for Rc<MainWin> {
                 }
                 "tab-size" => {
                     let val: u32 = gschema.get("tab-size");
-                    if val >= 1 && val <= 100 {
+                    if (1..=100).contains(&val) {
                         core.modify_user_config_domain(
                             "general",
                             &json!({ "tab_size": val })
@@ -1586,7 +1586,7 @@ impl MainWinExt for Rc<MainWin> {
                 "font" => {
                     let val: String = gschema.get("font");
                     if let Some((font_name, font_size)) = functions::get_font_properties(&val) {
-                        if font_size >= 6.0 && font_size <= 72.0 {
+                        if (6.0..=72.0).contains(&font_size) {
                             core.modify_user_config_domain(
                                 "general",
                                 &json!({ "font_face": font_name, "font_size": font_size })
@@ -1856,7 +1856,7 @@ impl MainWinExt for Rc<MainWin> {
             if let Some(ref file_name) = name {
                 self.core.save(edit_view.view_id, file_name);
             } else {
-                self.save_as(&edit_view);
+                self.save_as(edit_view);
             }
         }
     }
